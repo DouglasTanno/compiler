@@ -49,7 +49,7 @@
 /* use newer C++ skeleton file */
 %skeleton "lalr1.cc"
 /* Entry point of grammar */
-%start program
+%start programa
 
 %union
 {
@@ -62,30 +62,30 @@
 
 /* Tokens */
 /* Simbolos reservados */
-%token				VIRG			',' 
-%token				DOISP			':' 
-%token				PVIRG			';' 
-%token				EPAREN			'(' 
-%token				DPAREN			')' 
-%token				ECOLCH			'[' 
-%token				DCOLCH			']' 
-%token				ECHAVE			'{' 
-%token				DCHAVE			'}' 
-%token				PONTO			'.' 
-%token				MAIS			'+' 
-%token				MENOS			'-' 
-%token				ASTERISCO		'*' 
-%token				BARRA			'/' 
-%token				ATRIB			':='
-%token				IGUAL			'=='
-%token				NEG				'!='
-%token				MENOR			'<' 
-%token				MENORIG			'<='	
-%token				MAIOR			'>' 
-%token				MAIORIG			'>='	
-%token				E			    '&' 
-%token				OU			    '|' 
-%token				EQFUNC			'=' 
+%token				VIRG			"," 
+%token				DOISP			":" 
+%token				PVIRG			";" 
+%token				EPAREN			"(" 
+%token				DPAREN			")" 
+%token				ECOLCH			"[" 
+%token				DCOLCH			"]" 
+%token				ECHAVE			"{" 
+%token				DCHAVE			"}" 
+%token				PONTO			"." 
+%token				MAIS			"+" 
+%token				MENOS			"-" 
+%token				ASTERISCO		"*" 
+%token				BARRA			"/" 
+%token				ATRIB			":="
+%token				IGUAL			"=="
+%token				NEG				"!="
+%token				MENOR			"<" 
+%token				MENORIG			"<="
+%token				MAIOR			">" 
+%token				MAIORIG			">="
+%token				E			    "&" 
+%token				OU			    "|" 
+%token				EQFUNC			"=" 
 
 /* Palavras reservadas */
 %token              TOK_EOF 0     	"end of file"
@@ -128,7 +128,6 @@ programa:
         acao
 
 declaracoes:
-		/*VAZIO*/
         lista_declaracao_de_tipo
         lista_declaracoes_de_globais
         lista_declaracoes_funcao
@@ -170,7 +169,31 @@ tipo_constantes:
         INTEIRO 
         | tipo_constantes VIRG INTEIRO
 
+declaracao_variavel:
+		IDENTIFICADOR DOISP IDENTIFICADOR ATRIB inicializacao
 
+inicializacao:
+		expr
+		| ECHAVE criacao_de_registro DCHAVE
+		
+declaracao_funcao:
+		IDENTIFICADOR EPAREN args DPAREN EQFUNC corpo
+		| IDENTIFICADOR EPAREN args DPAREN DOISP IDENTIFICADOR EQFUNC corpo
+		
+args:
+		modificador IDENTIFICADOR DOISP IDENTIFICADOR
+
+modificador:
+		VALOR | REF
+		
+corpo:
+		declaracoes_de_locais
+		ACAO DOISP lista_comandos
+		
+declaracoes_de_locais:
+		/*VAZIO*/
+		| LOCAL DOISP lista_declaracao_variavel
+		
 
 
 

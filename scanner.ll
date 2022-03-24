@@ -57,8 +57,6 @@ eol     [\n\r]+
   STEP();
 %}
 
-/*Simbolos reservados*/
-
 ","             {return VIRG;}
 ":"             {return DOISP;}
 ";"             {return PVIRG;}
@@ -83,8 +81,6 @@ eol     [\n\r]+
 "&"             {return E;}
 "|"             {return OU;}
 "="             {return EQFUNC;}
-
-/*Palavras reservadas*/
 
 "pare"          {return PARE;}
 "continue"      {return CONTINUE;}
@@ -133,73 +129,6 @@ eol     [\n\r]+
 }
 
 
-\"   {init_string_buffer(); BEGIN cadeiaCond;}
-<cadeiaCond>\"  {
-	yylval.sval = String(string_buffer);
-	BEGIN 0;
-	return token::CADEIA;
-	}
-<cadeiaCond>\n  {
-	EM_error(EM_tokPos,"unclose string: newline appear in string");
-	yyterminate();
-	}
-<cadeiaCond><<EOF>> {
-	EM_error(EM_tokPos,"unclose string"); yyterminate();
-}
-<cadeiaCond>\\[0-9]{3} {
-	int tmp; sscanf(yytext+1, "%d", &tmp);
-	if(tmp > 0xff) {
-		EM_error(EM_tokPos,"ascii code out of range");
-		yyterminate(); 
-	}
-    append_to_buffer(tmp);
-}
-<cadeiaCond>\\[0-9]+ {
-	EM_error(EM_tokPos,"bad escape sequence");
-	yyterminate();
-}
-<cadeiaCond>\\n {
-	append_to_buffer('\n');
-}
-<cadeiaCond>\\t {
-	append_to_buffer('\t');
-}
-<cadeiaCond>\\\\ {
-	append_to_buffer('\\');
-}
-<cadeiaCond>\\\" {
-	append_to_buffer('\"');
-}
-<cadeiaCond>\^[@A-Z\[\\\]\^_?] {
-	append_to_buffer(yytext[1]-'a');
-}
-<cadeiaCond>\\[ \n\t\f]+\\ {
-	int i; for(i = 0; yytext[i]; ++i) 
-		if(yytext[i] == '\n') 
-			EM_newline();
-		continue;
-}
-<cadeiaCond>[^\\\n\"]* {
-	char *tmp = yytext; 
-	while(*tmp) append_to_buffer(*tmp++);
-}
-
-
-"/*" {
-	comment_level+=1;
-	BEGIN comentarioCond;
-}
-<comentarioCond>"*/" {
-	comment_level-=1;
-	if(comment_level==0)
-		BEGIN 0;
-		return token::COMENTARIO;
-}
-<comentarioCond><<EOF>> {
-	EM_error(EM_tokPos,"unclosed comment"); 
-	yyterminate();
-}
-<comentarioCond>.
 
 
 
