@@ -1,0 +1,2071 @@
+Terminais sem uso na gramática
+
+   "end of line"
+   "fpara"
+   "cadeia"
+   "inicio"
+   "fim"
+   "comentario"
+
+
+Estado 156 conflitos: 3 de redução/redução
+
+
+Gramática
+
+    0 $accept: programa "end of file"
+
+    1 programa: declaracoes acao
+
+    2 declaracoes: lista_declaracao_de_tipo lista_declaracoes_de_globais lista_declaracoes_de_funcoes
+
+    3 lista_declaracao_de_tipo: %empty
+    4                         | "tipo" ":" lista_declaracao_tipo
+
+    5 lista_declaracao_tipo: declaracao_tipo
+    6                      | lista_declaracao_tipo declaracao_tipo
+
+    7 lista_declaracoes_de_globais: %empty
+    8                             | "global" ":" lista_declaracao_variavel
+
+    9 lista_declaracao_variavel: declaracao_variavel
+   10                          | lista_declaracao_variavel declaracao_variavel
+
+   11 lista_declaracoes_de_funcoes: %empty
+   12                             | "funcao" ":" lista_declaracao_funcao
+
+   13 lista_declaracao_funcao: declaracao_funcao
+   14                        | lista_declaracao_funcao declaracao_funcao
+
+   15 acao: "acao" ":" lista_comandos
+
+   16 lista_comandos: comando
+   17               | lista_comandos ";" comando
+
+   18 comando: local_de_armazenamento ":=" expr
+   19        | chamada_de_funcao
+   20        | "se" expr "verdadeiro" lista_comandos "fse"
+   21        | "se" expr "verdadeiro" lista_comandos "falso" lista_comandos "fse"
+   22        | "para" "identificador" "de" expr "limite" expr "faca" lista_comandos "faca"
+   23        | "enquanto" expr "faca" lista_comandos "fenquanto"
+   24        | "pare"
+   25        | "continue"
+   26        | "retorne" expr
+
+   27 declaracao_tipo: "identificador" "=" descritor_tipo
+
+   28 descritor_tipo: "identificador"
+   29               | "{" tipo_campos "}"
+   30               | "[" tipo_constantes "]" "de" "identificador"
+
+   31 tipo_campos: tipo_campo
+   32            | tipo_campos "," tipo_campo
+
+   33 tipo_campo: "identificador" ":" "identificador"
+
+   34 tipo_constantes: "inteiro"
+   35                | tipo_constantes "," "inteiro"
+
+   36 declaracao_variavel: "identificador" ":" "identificador" ":=" inicializacao
+
+   37 inicializacao: expr
+   38              | "{" criacao_de_registro "}"
+
+   39 declaracao_funcao: "identificador" "(" args ")" "=" corpo
+   40                  | "identificador" "(" args ")" ":" "identificador" "=" corpo
+
+   41 args: modificador "identificador" ":" "identificador"
+
+   42 modificador: "valor"
+   43            | "ref"
+
+   44 corpo: declaracoes_de_locais "acao" ":" lista_comandos
+
+   45 declaracoes_de_locais: %empty
+   46                      | "local" ":" lista_declaracao_variavel
+
+   47 lista_args_chamada: %empty
+   48                   | fator
+   49                   | lista_args_chamada "," fator
+
+   50 expr: "{" criacao_de_registro "}"
+   51     | expressao_logica
+
+   52 expressao_logica: expressao_logica "&" expressao_relacional
+   53                 | expressao_logica "|" expressao_relacional
+   54                 | expressao_relacional
+
+   55 expressao_relacional: expressao_relacional "==" expressao_aritmetica
+   56                     | expressao_relacional "!=" expressao_aritmetica
+   57                     | expressao_relacional "<" expressao_aritmetica
+   58                     | expressao_relacional "<=" expressao_aritmetica
+   59                     | expressao_relacional ">" expressao_aritmetica
+   60                     | expressao_relacional ">=" expressao_aritmetica
+   61                     | expressao_aritmetica
+
+   62 expressao_aritmetica: expressao_aritmetica "+" termo
+   63                     | expressao_aritmetica "-" termo
+   64                     | termo
+
+   65 criacao_de_registro: atribuicao_de_registro
+   66                    | criacao_de_registro "," atribuicao_de_registro
+
+   67 local_de_armazenamento: "identificador"
+   68                       | local_de_armazenamento "." "identificador"
+   69                       | local_de_armazenamento "[" lista_args_chamada "]"
+
+   70 atribuicao_de_registro: "identificador" "=" expr
+
+   71 literal: "inteiro"
+   72        | "real"
+
+   73 termo: termo "*" fator
+   74      | termo "/" fator
+   75      | fator
+
+   76 fator: "(" expr ")"
+   77      | literal
+   78      | local_de_armazenamento
+   79      | chamada_de_funcao
+   80      | "nulo"
+
+   81 chamada_de_funcao: "identificador" "(" lista_args_chamada ")"
+
+
+Terminais, com as regras onde eles aparecem
+
+"end of file" (0) 0
+error (256)
+"," (258) 32 35 49 66
+":" (259) 4 8 12 15 33 36 40 41 44 46
+";" (260) 17
+"(" (261) 39 40 76 81
+")" (262) 39 40 76 81
+"[" (263) 30 69
+"]" (264) 30 69
+"{" (265) 29 38 50
+"}" (266) 29 38 50
+"." (267) 68
+"+" (268) 62
+"-" (269) 63
+"*" (270) 73
+"/" (271) 74
+":=" (272) 18 36
+"==" (273) 55
+"!=" (274) 56
+"<" (275) 57
+"<=" (276) 58
+">" (277) 59
+">=" (278) 60
+"&" (279) 52
+"|" (280) 53
+"=" (281) 27 39 40 70
+"end of line" (282)
+"inteiro" (283) 34 35 71
+"real" (284) 72
+"identificador" (285) 22 27 28 30 33 36 39 40 41 67 68 70 81
+"pare" (286) 24
+"continue" (287) 25
+"para" (288) 22
+"fpara" (289)
+"enquanto" (290) 23
+"fenquanto" (291) 23
+"faca" (292) 22 23
+"se" (293) 20 21
+"fse" (294) 20 21
+"verdadeiro" (295) 20 21
+"falso" (296) 21
+"tipo" (297) 4
+"de" (298) 22 30
+"limite" (299) 22
+"global" (300) 8
+"local" (301) 46
+"cadeia" (302)
+"valor" (303) 42
+"ref" (304) 43
+"retorne" (305) 26
+"nulo" (306) 80
+"inicio" (307)
+"fim" (308)
+"funcao" (309) 12
+"acao" (310) 15 44
+"comentario" (311)
+
+
+Não terminais com as regras onde eles aparecem
+
+$accept (57)
+    à esquerda: 0
+programa (58)
+    à esquerda: 1, à direita: 0
+declaracoes (59)
+    à esquerda: 2, à direita: 1
+lista_declaracao_de_tipo (60)
+    à esquerda: 3 4, à direita: 2
+lista_declaracao_tipo (61)
+    à esquerda: 5 6, à direita: 4 6
+lista_declaracoes_de_globais (62)
+    à esquerda: 7 8, à direita: 2
+lista_declaracao_variavel (63)
+    à esquerda: 9 10, à direita: 8 10 46
+lista_declaracoes_de_funcoes (64)
+    à esquerda: 11 12, à direita: 2
+lista_declaracao_funcao (65)
+    à esquerda: 13 14, à direita: 12 14
+acao (66)
+    à esquerda: 15, à direita: 1
+lista_comandos (67)
+    à esquerda: 16 17, à direita: 15 17 20 21 22 23 44
+comando (68)
+    à esquerda: 18 19 20 21 22 23 24 25 26, à direita: 16 17
+declaracao_tipo (69)
+    à esquerda: 27, à direita: 5 6
+descritor_tipo (70)
+    à esquerda: 28 29 30, à direita: 27
+tipo_campos (71)
+    à esquerda: 31 32, à direita: 29 32
+tipo_campo (72)
+    à esquerda: 33, à direita: 31 32
+tipo_constantes (73)
+    à esquerda: 34 35, à direita: 30 35
+declaracao_variavel (74)
+    à esquerda: 36, à direita: 9 10
+inicializacao (75)
+    à esquerda: 37 38, à direita: 36
+declaracao_funcao (76)
+    à esquerda: 39 40, à direita: 13 14
+args (77)
+    à esquerda: 41, à direita: 39 40
+modificador (78)
+    à esquerda: 42 43, à direita: 41
+corpo (79)
+    à esquerda: 44, à direita: 39 40
+declaracoes_de_locais (80)
+    à esquerda: 45 46, à direita: 44
+lista_args_chamada (81)
+    à esquerda: 47 48 49, à direita: 49 69 81
+expr (82)
+    à esquerda: 50 51, à direita: 18 20 21 22 23 26 37 70 76
+expressao_logica (83)
+    à esquerda: 52 53 54, à direita: 51 52 53
+expressao_relacional (84)
+    à esquerda: 55 56 57 58 59 60 61, à direita: 52 53 54 55 56 57
+    58 59 60
+expressao_aritmetica (85)
+    à esquerda: 62 63 64, à direita: 55 56 57 58 59 60 61 62 63
+criacao_de_registro (86)
+    à esquerda: 65 66, à direita: 38 50 66
+local_de_armazenamento (87)
+    à esquerda: 67 68 69, à direita: 18 68 69 78
+atribuicao_de_registro (88)
+    à esquerda: 70, à direita: 65 66
+literal (89)
+    à esquerda: 71 72, à direita: 77
+termo (90)
+    à esquerda: 73 74 75, à direita: 62 63 64 73 74
+fator (91)
+    à esquerda: 76 77 78 79 80, à direita: 48 49 73 74 75
+chamada_de_funcao (92)
+    à esquerda: 81, à direita: 19 79
+
+
+Estado 0
+
+    0 $accept: . programa "end of file"
+
+    "tipo"  deslocar, e ir ao estado 1
+
+    $padrão  reduzir usando a regra 3 (lista_declaracao_de_tipo)
+
+    programa                  ir ao estado 2
+    declaracoes               ir ao estado 3
+    lista_declaracao_de_tipo  ir ao estado 4
+
+
+Estado 1
+
+    4 lista_declaracao_de_tipo: "tipo" . ":" lista_declaracao_tipo
+
+    ":"  deslocar, e ir ao estado 5
+
+
+Estado 2
+
+    0 $accept: programa . "end of file"
+
+    "end of file"  deslocar, e ir ao estado 6
+
+
+Estado 3
+
+    1 programa: declaracoes . acao
+
+    "acao"  deslocar, e ir ao estado 7
+
+    acao  ir ao estado 8
+
+
+Estado 4
+
+    2 declaracoes: lista_declaracao_de_tipo . lista_declaracoes_de_globais lista_declaracoes_de_funcoes
+
+    "global"  deslocar, e ir ao estado 9
+
+    $padrão  reduzir usando a regra 7 (lista_declaracoes_de_globais)
+
+    lista_declaracoes_de_globais  ir ao estado 10
+
+
+Estado 5
+
+    4 lista_declaracao_de_tipo: "tipo" ":" . lista_declaracao_tipo
+
+    "identificador"  deslocar, e ir ao estado 11
+
+    lista_declaracao_tipo  ir ao estado 12
+    declaracao_tipo        ir ao estado 13
+
+
+Estado 6
+
+    0 $accept: programa "end of file" .
+
+    $padrão  aceitar
+
+
+Estado 7
+
+   15 acao: "acao" . ":" lista_comandos
+
+    ":"  deslocar, e ir ao estado 14
+
+
+Estado 8
+
+    1 programa: declaracoes acao .
+
+    $padrão  reduzir usando a regra 1 (programa)
+
+
+Estado 9
+
+    8 lista_declaracoes_de_globais: "global" . ":" lista_declaracao_variavel
+
+    ":"  deslocar, e ir ao estado 15
+
+
+Estado 10
+
+    2 declaracoes: lista_declaracao_de_tipo lista_declaracoes_de_globais . lista_declaracoes_de_funcoes
+
+    "funcao"  deslocar, e ir ao estado 16
+
+    $padrão  reduzir usando a regra 11 (lista_declaracoes_de_funcoes)
+
+    lista_declaracoes_de_funcoes  ir ao estado 17
+
+
+Estado 11
+
+   27 declaracao_tipo: "identificador" . "=" descritor_tipo
+
+    "="  deslocar, e ir ao estado 18
+
+
+Estado 12
+
+    4 lista_declaracao_de_tipo: "tipo" ":" lista_declaracao_tipo .
+    6 lista_declaracao_tipo: lista_declaracao_tipo . declaracao_tipo
+
+    "identificador"  deslocar, e ir ao estado 11
+
+    $padrão  reduzir usando a regra 4 (lista_declaracao_de_tipo)
+
+    declaracao_tipo  ir ao estado 19
+
+
+Estado 13
+
+    5 lista_declaracao_tipo: declaracao_tipo .
+
+    $padrão  reduzir usando a regra 5 (lista_declaracao_tipo)
+
+
+Estado 14
+
+   15 acao: "acao" ":" . lista_comandos
+
+    "identificador"  deslocar, e ir ao estado 20
+    "pare"           deslocar, e ir ao estado 21
+    "continue"       deslocar, e ir ao estado 22
+    "para"           deslocar, e ir ao estado 23
+    "enquanto"       deslocar, e ir ao estado 24
+    "se"             deslocar, e ir ao estado 25
+    "retorne"        deslocar, e ir ao estado 26
+
+    lista_comandos          ir ao estado 27
+    comando                 ir ao estado 28
+    local_de_armazenamento  ir ao estado 29
+    chamada_de_funcao       ir ao estado 30
+
+
+Estado 15
+
+    8 lista_declaracoes_de_globais: "global" ":" . lista_declaracao_variavel
+
+    "identificador"  deslocar, e ir ao estado 31
+
+    lista_declaracao_variavel  ir ao estado 32
+    declaracao_variavel        ir ao estado 33
+
+
+Estado 16
+
+   12 lista_declaracoes_de_funcoes: "funcao" . ":" lista_declaracao_funcao
+
+    ":"  deslocar, e ir ao estado 34
+
+
+Estado 17
+
+    2 declaracoes: lista_declaracao_de_tipo lista_declaracoes_de_globais lista_declaracoes_de_funcoes .
+
+    $padrão  reduzir usando a regra 2 (declaracoes)
+
+
+Estado 18
+
+   27 declaracao_tipo: "identificador" "=" . descritor_tipo
+
+    "["              deslocar, e ir ao estado 35
+    "{"              deslocar, e ir ao estado 36
+    "identificador"  deslocar, e ir ao estado 37
+
+    descritor_tipo  ir ao estado 38
+
+
+Estado 19
+
+    6 lista_declaracao_tipo: lista_declaracao_tipo declaracao_tipo .
+
+    $padrão  reduzir usando a regra 6 (lista_declaracao_tipo)
+
+
+Estado 20
+
+   67 local_de_armazenamento: "identificador" .
+   81 chamada_de_funcao: "identificador" . "(" lista_args_chamada ")"
+
+    "("  deslocar, e ir ao estado 39
+
+    $padrão  reduzir usando a regra 67 (local_de_armazenamento)
+
+
+Estado 21
+
+   24 comando: "pare" .
+
+    $padrão  reduzir usando a regra 24 (comando)
+
+
+Estado 22
+
+   25 comando: "continue" .
+
+    $padrão  reduzir usando a regra 25 (comando)
+
+
+Estado 23
+
+   22 comando: "para" . "identificador" "de" expr "limite" expr "faca" lista_comandos "faca"
+
+    "identificador"  deslocar, e ir ao estado 40
+
+
+Estado 24
+
+   23 comando: "enquanto" . expr "faca" lista_comandos "fenquanto"
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 42
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expr                    ir ao estado 46
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 25
+
+   20 comando: "se" . expr "verdadeiro" lista_comandos "fse"
+   21        | "se" . expr "verdadeiro" lista_comandos "falso" lista_comandos "fse"
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 42
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expr                    ir ao estado 55
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 26
+
+   26 comando: "retorne" . expr
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 42
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expr                    ir ao estado 56
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 27
+
+   15 acao: "acao" ":" lista_comandos .
+   17 lista_comandos: lista_comandos . ";" comando
+
+    ";"  deslocar, e ir ao estado 57
+
+    $padrão  reduzir usando a regra 15 (acao)
+
+
+Estado 28
+
+   16 lista_comandos: comando .
+
+    $padrão  reduzir usando a regra 16 (lista_comandos)
+
+
+Estado 29
+
+   18 comando: local_de_armazenamento . ":=" expr
+   68 local_de_armazenamento: local_de_armazenamento . "." "identificador"
+   69                       | local_de_armazenamento . "[" lista_args_chamada "]"
+
+    "["   deslocar, e ir ao estado 58
+    "."   deslocar, e ir ao estado 59
+    ":="  deslocar, e ir ao estado 60
+
+
+Estado 30
+
+   19 comando: chamada_de_funcao .
+
+    $padrão  reduzir usando a regra 19 (comando)
+
+
+Estado 31
+
+   36 declaracao_variavel: "identificador" . ":" "identificador" ":=" inicializacao
+
+    ":"  deslocar, e ir ao estado 61
+
+
+Estado 32
+
+    8 lista_declaracoes_de_globais: "global" ":" lista_declaracao_variavel .
+   10 lista_declaracao_variavel: lista_declaracao_variavel . declaracao_variavel
+
+    "identificador"  deslocar, e ir ao estado 31
+
+    $padrão  reduzir usando a regra 8 (lista_declaracoes_de_globais)
+
+    declaracao_variavel  ir ao estado 62
+
+
+Estado 33
+
+    9 lista_declaracao_variavel: declaracao_variavel .
+
+    $padrão  reduzir usando a regra 9 (lista_declaracao_variavel)
+
+
+Estado 34
+
+   12 lista_declaracoes_de_funcoes: "funcao" ":" . lista_declaracao_funcao
+
+    "identificador"  deslocar, e ir ao estado 63
+
+    lista_declaracao_funcao  ir ao estado 64
+    declaracao_funcao        ir ao estado 65
+
+
+Estado 35
+
+   30 descritor_tipo: "[" . tipo_constantes "]" "de" "identificador"
+
+    "inteiro"  deslocar, e ir ao estado 66
+
+    tipo_constantes  ir ao estado 67
+
+
+Estado 36
+
+   29 descritor_tipo: "{" . tipo_campos "}"
+
+    "identificador"  deslocar, e ir ao estado 68
+
+    tipo_campos  ir ao estado 69
+    tipo_campo   ir ao estado 70
+
+
+Estado 37
+
+   28 descritor_tipo: "identificador" .
+
+    $padrão  reduzir usando a regra 28 (descritor_tipo)
+
+
+Estado 38
+
+   27 declaracao_tipo: "identificador" "=" descritor_tipo .
+
+    $padrão  reduzir usando a regra 27 (declaracao_tipo)
+
+
+Estado 39
+
+   81 chamada_de_funcao: "identificador" "(" . lista_args_chamada ")"
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    $padrão  reduzir usando a regra 47 (lista_args_chamada)
+
+    lista_args_chamada      ir ao estado 71
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    fator                   ir ao estado 72
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 40
+
+   22 comando: "para" "identificador" . "de" expr "limite" expr "faca" lista_comandos "faca"
+
+    "de"  deslocar, e ir ao estado 73
+
+
+Estado 41
+
+   76 fator: "(" . expr ")"
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 42
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expr                    ir ao estado 74
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 42
+
+   50 expr: "{" . criacao_de_registro "}"
+
+    "identificador"  deslocar, e ir ao estado 75
+
+    criacao_de_registro     ir ao estado 76
+    atribuicao_de_registro  ir ao estado 77
+
+
+Estado 43
+
+   71 literal: "inteiro" .
+
+    $padrão  reduzir usando a regra 71 (literal)
+
+
+Estado 44
+
+   72 literal: "real" .
+
+    $padrão  reduzir usando a regra 72 (literal)
+
+
+Estado 45
+
+   80 fator: "nulo" .
+
+    $padrão  reduzir usando a regra 80 (fator)
+
+
+Estado 46
+
+   23 comando: "enquanto" expr . "faca" lista_comandos "fenquanto"
+
+    "faca"  deslocar, e ir ao estado 78
+
+
+Estado 47
+
+   51 expr: expressao_logica .
+   52 expressao_logica: expressao_logica . "&" expressao_relacional
+   53                 | expressao_logica . "|" expressao_relacional
+
+    "&"  deslocar, e ir ao estado 79
+    "|"  deslocar, e ir ao estado 80
+
+    $padrão  reduzir usando a regra 51 (expr)
+
+
+Estado 48
+
+   54 expressao_logica: expressao_relacional .
+   55 expressao_relacional: expressao_relacional . "==" expressao_aritmetica
+   56                     | expressao_relacional . "!=" expressao_aritmetica
+   57                     | expressao_relacional . "<" expressao_aritmetica
+   58                     | expressao_relacional . "<=" expressao_aritmetica
+   59                     | expressao_relacional . ">" expressao_aritmetica
+   60                     | expressao_relacional . ">=" expressao_aritmetica
+
+    "=="  deslocar, e ir ao estado 81
+    "!="  deslocar, e ir ao estado 82
+    "<"   deslocar, e ir ao estado 83
+    "<="  deslocar, e ir ao estado 84
+    ">"   deslocar, e ir ao estado 85
+    ">="  deslocar, e ir ao estado 86
+
+    $padrão  reduzir usando a regra 54 (expressao_logica)
+
+
+Estado 49
+
+   61 expressao_relacional: expressao_aritmetica .
+   62 expressao_aritmetica: expressao_aritmetica . "+" termo
+   63                     | expressao_aritmetica . "-" termo
+
+    "+"  deslocar, e ir ao estado 87
+    "-"  deslocar, e ir ao estado 88
+
+    $padrão  reduzir usando a regra 61 (expressao_relacional)
+
+
+Estado 50
+
+   68 local_de_armazenamento: local_de_armazenamento . "." "identificador"
+   69                       | local_de_armazenamento . "[" lista_args_chamada "]"
+   78 fator: local_de_armazenamento .
+
+    "["  deslocar, e ir ao estado 58
+    "."  deslocar, e ir ao estado 59
+
+    $padrão  reduzir usando a regra 78 (fator)
+
+
+Estado 51
+
+   77 fator: literal .
+
+    $padrão  reduzir usando a regra 77 (fator)
+
+
+Estado 52
+
+   64 expressao_aritmetica: termo .
+   73 termo: termo . "*" fator
+   74      | termo . "/" fator
+
+    "*"  deslocar, e ir ao estado 89
+    "/"  deslocar, e ir ao estado 90
+
+    $padrão  reduzir usando a regra 64 (expressao_aritmetica)
+
+
+Estado 53
+
+   75 termo: fator .
+
+    $padrão  reduzir usando a regra 75 (termo)
+
+
+Estado 54
+
+   79 fator: chamada_de_funcao .
+
+    $padrão  reduzir usando a regra 79 (fator)
+
+
+Estado 55
+
+   20 comando: "se" expr . "verdadeiro" lista_comandos "fse"
+   21        | "se" expr . "verdadeiro" lista_comandos "falso" lista_comandos "fse"
+
+    "verdadeiro"  deslocar, e ir ao estado 91
+
+
+Estado 56
+
+   26 comando: "retorne" expr .
+
+    $padrão  reduzir usando a regra 26 (comando)
+
+
+Estado 57
+
+   17 lista_comandos: lista_comandos ";" . comando
+
+    "identificador"  deslocar, e ir ao estado 20
+    "pare"           deslocar, e ir ao estado 21
+    "continue"       deslocar, e ir ao estado 22
+    "para"           deslocar, e ir ao estado 23
+    "enquanto"       deslocar, e ir ao estado 24
+    "se"             deslocar, e ir ao estado 25
+    "retorne"        deslocar, e ir ao estado 26
+
+    comando                 ir ao estado 92
+    local_de_armazenamento  ir ao estado 29
+    chamada_de_funcao       ir ao estado 30
+
+
+Estado 58
+
+   69 local_de_armazenamento: local_de_armazenamento "[" . lista_args_chamada "]"
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    $padrão  reduzir usando a regra 47 (lista_args_chamada)
+
+    lista_args_chamada      ir ao estado 93
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    fator                   ir ao estado 72
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 59
+
+   68 local_de_armazenamento: local_de_armazenamento "." . "identificador"
+
+    "identificador"  deslocar, e ir ao estado 94
+
+
+Estado 60
+
+   18 comando: local_de_armazenamento ":=" . expr
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 42
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expr                    ir ao estado 95
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 61
+
+   36 declaracao_variavel: "identificador" ":" . "identificador" ":=" inicializacao
+
+    "identificador"  deslocar, e ir ao estado 96
+
+
+Estado 62
+
+   10 lista_declaracao_variavel: lista_declaracao_variavel declaracao_variavel .
+
+    $padrão  reduzir usando a regra 10 (lista_declaracao_variavel)
+
+
+Estado 63
+
+   39 declaracao_funcao: "identificador" . "(" args ")" "=" corpo
+   40                  | "identificador" . "(" args ")" ":" "identificador" "=" corpo
+
+    "("  deslocar, e ir ao estado 97
+
+
+Estado 64
+
+   12 lista_declaracoes_de_funcoes: "funcao" ":" lista_declaracao_funcao .
+   14 lista_declaracao_funcao: lista_declaracao_funcao . declaracao_funcao
+
+    "identificador"  deslocar, e ir ao estado 63
+
+    $padrão  reduzir usando a regra 12 (lista_declaracoes_de_funcoes)
+
+    declaracao_funcao  ir ao estado 98
+
+
+Estado 65
+
+   13 lista_declaracao_funcao: declaracao_funcao .
+
+    $padrão  reduzir usando a regra 13 (lista_declaracao_funcao)
+
+
+Estado 66
+
+   34 tipo_constantes: "inteiro" .
+
+    $padrão  reduzir usando a regra 34 (tipo_constantes)
+
+
+Estado 67
+
+   30 descritor_tipo: "[" tipo_constantes . "]" "de" "identificador"
+   35 tipo_constantes: tipo_constantes . "," "inteiro"
+
+    ","  deslocar, e ir ao estado 99
+    "]"  deslocar, e ir ao estado 100
+
+
+Estado 68
+
+   33 tipo_campo: "identificador" . ":" "identificador"
+
+    ":"  deslocar, e ir ao estado 101
+
+
+Estado 69
+
+   29 descritor_tipo: "{" tipo_campos . "}"
+   32 tipo_campos: tipo_campos . "," tipo_campo
+
+    ","  deslocar, e ir ao estado 102
+    "}"  deslocar, e ir ao estado 103
+
+
+Estado 70
+
+   31 tipo_campos: tipo_campo .
+
+    $padrão  reduzir usando a regra 31 (tipo_campos)
+
+
+Estado 71
+
+   49 lista_args_chamada: lista_args_chamada . "," fator
+   81 chamada_de_funcao: "identificador" "(" lista_args_chamada . ")"
+
+    ","  deslocar, e ir ao estado 104
+    ")"  deslocar, e ir ao estado 105
+
+
+Estado 72
+
+   48 lista_args_chamada: fator .
+
+    $padrão  reduzir usando a regra 48 (lista_args_chamada)
+
+
+Estado 73
+
+   22 comando: "para" "identificador" "de" . expr "limite" expr "faca" lista_comandos "faca"
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 42
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expr                    ir ao estado 106
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 74
+
+   76 fator: "(" expr . ")"
+
+    ")"  deslocar, e ir ao estado 107
+
+
+Estado 75
+
+   70 atribuicao_de_registro: "identificador" . "=" expr
+
+    "="  deslocar, e ir ao estado 108
+
+
+Estado 76
+
+   50 expr: "{" criacao_de_registro . "}"
+   66 criacao_de_registro: criacao_de_registro . "," atribuicao_de_registro
+
+    ","  deslocar, e ir ao estado 109
+    "}"  deslocar, e ir ao estado 110
+
+
+Estado 77
+
+   65 criacao_de_registro: atribuicao_de_registro .
+
+    $padrão  reduzir usando a regra 65 (criacao_de_registro)
+
+
+Estado 78
+
+   23 comando: "enquanto" expr "faca" . lista_comandos "fenquanto"
+
+    "identificador"  deslocar, e ir ao estado 20
+    "pare"           deslocar, e ir ao estado 21
+    "continue"       deslocar, e ir ao estado 22
+    "para"           deslocar, e ir ao estado 23
+    "enquanto"       deslocar, e ir ao estado 24
+    "se"             deslocar, e ir ao estado 25
+    "retorne"        deslocar, e ir ao estado 26
+
+    lista_comandos          ir ao estado 111
+    comando                 ir ao estado 28
+    local_de_armazenamento  ir ao estado 29
+    chamada_de_funcao       ir ao estado 30
+
+
+Estado 79
+
+   52 expressao_logica: expressao_logica "&" . expressao_relacional
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expressao_relacional    ir ao estado 112
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 80
+
+   53 expressao_logica: expressao_logica "|" . expressao_relacional
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expressao_relacional    ir ao estado 113
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 81
+
+   55 expressao_relacional: expressao_relacional "==" . expressao_aritmetica
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expressao_aritmetica    ir ao estado 114
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 82
+
+   56 expressao_relacional: expressao_relacional "!=" . expressao_aritmetica
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expressao_aritmetica    ir ao estado 115
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 83
+
+   57 expressao_relacional: expressao_relacional "<" . expressao_aritmetica
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expressao_aritmetica    ir ao estado 116
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 84
+
+   58 expressao_relacional: expressao_relacional "<=" . expressao_aritmetica
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expressao_aritmetica    ir ao estado 117
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 85
+
+   59 expressao_relacional: expressao_relacional ">" . expressao_aritmetica
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expressao_aritmetica    ir ao estado 118
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 86
+
+   60 expressao_relacional: expressao_relacional ">=" . expressao_aritmetica
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expressao_aritmetica    ir ao estado 119
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 87
+
+   62 expressao_aritmetica: expressao_aritmetica "+" . termo
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 120
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 88
+
+   63 expressao_aritmetica: expressao_aritmetica "-" . termo
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 121
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 89
+
+   73 termo: termo "*" . fator
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    fator                   ir ao estado 122
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 90
+
+   74 termo: termo "/" . fator
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    fator                   ir ao estado 123
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 91
+
+   20 comando: "se" expr "verdadeiro" . lista_comandos "fse"
+   21        | "se" expr "verdadeiro" . lista_comandos "falso" lista_comandos "fse"
+
+    "identificador"  deslocar, e ir ao estado 20
+    "pare"           deslocar, e ir ao estado 21
+    "continue"       deslocar, e ir ao estado 22
+    "para"           deslocar, e ir ao estado 23
+    "enquanto"       deslocar, e ir ao estado 24
+    "se"             deslocar, e ir ao estado 25
+    "retorne"        deslocar, e ir ao estado 26
+
+    lista_comandos          ir ao estado 124
+    comando                 ir ao estado 28
+    local_de_armazenamento  ir ao estado 29
+    chamada_de_funcao       ir ao estado 30
+
+
+Estado 92
+
+   17 lista_comandos: lista_comandos ";" comando .
+
+    $padrão  reduzir usando a regra 17 (lista_comandos)
+
+
+Estado 93
+
+   49 lista_args_chamada: lista_args_chamada . "," fator
+   69 local_de_armazenamento: local_de_armazenamento "[" lista_args_chamada . "]"
+
+    ","  deslocar, e ir ao estado 104
+    "]"  deslocar, e ir ao estado 125
+
+
+Estado 94
+
+   68 local_de_armazenamento: local_de_armazenamento "." "identificador" .
+
+    $padrão  reduzir usando a regra 68 (local_de_armazenamento)
+
+
+Estado 95
+
+   18 comando: local_de_armazenamento ":=" expr .
+
+    $padrão  reduzir usando a regra 18 (comando)
+
+
+Estado 96
+
+   36 declaracao_variavel: "identificador" ":" "identificador" . ":=" inicializacao
+
+    ":="  deslocar, e ir ao estado 126
+
+
+Estado 97
+
+   39 declaracao_funcao: "identificador" "(" . args ")" "=" corpo
+   40                  | "identificador" "(" . args ")" ":" "identificador" "=" corpo
+
+    "valor"  deslocar, e ir ao estado 127
+    "ref"    deslocar, e ir ao estado 128
+
+    args         ir ao estado 129
+    modificador  ir ao estado 130
+
+
+Estado 98
+
+   14 lista_declaracao_funcao: lista_declaracao_funcao declaracao_funcao .
+
+    $padrão  reduzir usando a regra 14 (lista_declaracao_funcao)
+
+
+Estado 99
+
+   35 tipo_constantes: tipo_constantes "," . "inteiro"
+
+    "inteiro"  deslocar, e ir ao estado 131
+
+
+Estado 100
+
+   30 descritor_tipo: "[" tipo_constantes "]" . "de" "identificador"
+
+    "de"  deslocar, e ir ao estado 132
+
+
+Estado 101
+
+   33 tipo_campo: "identificador" ":" . "identificador"
+
+    "identificador"  deslocar, e ir ao estado 133
+
+
+Estado 102
+
+   32 tipo_campos: tipo_campos "," . tipo_campo
+
+    "identificador"  deslocar, e ir ao estado 68
+
+    tipo_campo  ir ao estado 134
+
+
+Estado 103
+
+   29 descritor_tipo: "{" tipo_campos "}" .
+
+    $padrão  reduzir usando a regra 29 (descritor_tipo)
+
+
+Estado 104
+
+   49 lista_args_chamada: lista_args_chamada "," . fator
+
+    "("              deslocar, e ir ao estado 41
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    fator                   ir ao estado 135
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 105
+
+   81 chamada_de_funcao: "identificador" "(" lista_args_chamada ")" .
+
+    $padrão  reduzir usando a regra 81 (chamada_de_funcao)
+
+
+Estado 106
+
+   22 comando: "para" "identificador" "de" expr . "limite" expr "faca" lista_comandos "faca"
+
+    "limite"  deslocar, e ir ao estado 136
+
+
+Estado 107
+
+   76 fator: "(" expr ")" .
+
+    $padrão  reduzir usando a regra 76 (fator)
+
+
+Estado 108
+
+   70 atribuicao_de_registro: "identificador" "=" . expr
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 42
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expr                    ir ao estado 137
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 109
+
+   66 criacao_de_registro: criacao_de_registro "," . atribuicao_de_registro
+
+    "identificador"  deslocar, e ir ao estado 75
+
+    atribuicao_de_registro  ir ao estado 138
+
+
+Estado 110
+
+   50 expr: "{" criacao_de_registro "}" .
+
+    $padrão  reduzir usando a regra 50 (expr)
+
+
+Estado 111
+
+   17 lista_comandos: lista_comandos . ";" comando
+   23 comando: "enquanto" expr "faca" lista_comandos . "fenquanto"
+
+    ";"          deslocar, e ir ao estado 57
+    "fenquanto"  deslocar, e ir ao estado 139
+
+
+Estado 112
+
+   52 expressao_logica: expressao_logica "&" expressao_relacional .
+   55 expressao_relacional: expressao_relacional . "==" expressao_aritmetica
+   56                     | expressao_relacional . "!=" expressao_aritmetica
+   57                     | expressao_relacional . "<" expressao_aritmetica
+   58                     | expressao_relacional . "<=" expressao_aritmetica
+   59                     | expressao_relacional . ">" expressao_aritmetica
+   60                     | expressao_relacional . ">=" expressao_aritmetica
+
+    "=="  deslocar, e ir ao estado 81
+    "!="  deslocar, e ir ao estado 82
+    "<"   deslocar, e ir ao estado 83
+    "<="  deslocar, e ir ao estado 84
+    ">"   deslocar, e ir ao estado 85
+    ">="  deslocar, e ir ao estado 86
+
+    $padrão  reduzir usando a regra 52 (expressao_logica)
+
+
+Estado 113
+
+   53 expressao_logica: expressao_logica "|" expressao_relacional .
+   55 expressao_relacional: expressao_relacional . "==" expressao_aritmetica
+   56                     | expressao_relacional . "!=" expressao_aritmetica
+   57                     | expressao_relacional . "<" expressao_aritmetica
+   58                     | expressao_relacional . "<=" expressao_aritmetica
+   59                     | expressao_relacional . ">" expressao_aritmetica
+   60                     | expressao_relacional . ">=" expressao_aritmetica
+
+    "=="  deslocar, e ir ao estado 81
+    "!="  deslocar, e ir ao estado 82
+    "<"   deslocar, e ir ao estado 83
+    "<="  deslocar, e ir ao estado 84
+    ">"   deslocar, e ir ao estado 85
+    ">="  deslocar, e ir ao estado 86
+
+    $padrão  reduzir usando a regra 53 (expressao_logica)
+
+
+Estado 114
+
+   55 expressao_relacional: expressao_relacional "==" expressao_aritmetica .
+   62 expressao_aritmetica: expressao_aritmetica . "+" termo
+   63                     | expressao_aritmetica . "-" termo
+
+    "+"  deslocar, e ir ao estado 87
+    "-"  deslocar, e ir ao estado 88
+
+    $padrão  reduzir usando a regra 55 (expressao_relacional)
+
+
+Estado 115
+
+   56 expressao_relacional: expressao_relacional "!=" expressao_aritmetica .
+   62 expressao_aritmetica: expressao_aritmetica . "+" termo
+   63                     | expressao_aritmetica . "-" termo
+
+    "+"  deslocar, e ir ao estado 87
+    "-"  deslocar, e ir ao estado 88
+
+    $padrão  reduzir usando a regra 56 (expressao_relacional)
+
+
+Estado 116
+
+   57 expressao_relacional: expressao_relacional "<" expressao_aritmetica .
+   62 expressao_aritmetica: expressao_aritmetica . "+" termo
+   63                     | expressao_aritmetica . "-" termo
+
+    "+"  deslocar, e ir ao estado 87
+    "-"  deslocar, e ir ao estado 88
+
+    $padrão  reduzir usando a regra 57 (expressao_relacional)
+
+
+Estado 117
+
+   58 expressao_relacional: expressao_relacional "<=" expressao_aritmetica .
+   62 expressao_aritmetica: expressao_aritmetica . "+" termo
+   63                     | expressao_aritmetica . "-" termo
+
+    "+"  deslocar, e ir ao estado 87
+    "-"  deslocar, e ir ao estado 88
+
+    $padrão  reduzir usando a regra 58 (expressao_relacional)
+
+
+Estado 118
+
+   59 expressao_relacional: expressao_relacional ">" expressao_aritmetica .
+   62 expressao_aritmetica: expressao_aritmetica . "+" termo
+   63                     | expressao_aritmetica . "-" termo
+
+    "+"  deslocar, e ir ao estado 87
+    "-"  deslocar, e ir ao estado 88
+
+    $padrão  reduzir usando a regra 59 (expressao_relacional)
+
+
+Estado 119
+
+   60 expressao_relacional: expressao_relacional ">=" expressao_aritmetica .
+   62 expressao_aritmetica: expressao_aritmetica . "+" termo
+   63                     | expressao_aritmetica . "-" termo
+
+    "+"  deslocar, e ir ao estado 87
+    "-"  deslocar, e ir ao estado 88
+
+    $padrão  reduzir usando a regra 60 (expressao_relacional)
+
+
+Estado 120
+
+   62 expressao_aritmetica: expressao_aritmetica "+" termo .
+   73 termo: termo . "*" fator
+   74      | termo . "/" fator
+
+    "*"  deslocar, e ir ao estado 89
+    "/"  deslocar, e ir ao estado 90
+
+    $padrão  reduzir usando a regra 62 (expressao_aritmetica)
+
+
+Estado 121
+
+   63 expressao_aritmetica: expressao_aritmetica "-" termo .
+   73 termo: termo . "*" fator
+   74      | termo . "/" fator
+
+    "*"  deslocar, e ir ao estado 89
+    "/"  deslocar, e ir ao estado 90
+
+    $padrão  reduzir usando a regra 63 (expressao_aritmetica)
+
+
+Estado 122
+
+   73 termo: termo "*" fator .
+
+    $padrão  reduzir usando a regra 73 (termo)
+
+
+Estado 123
+
+   74 termo: termo "/" fator .
+
+    $padrão  reduzir usando a regra 74 (termo)
+
+
+Estado 124
+
+   17 lista_comandos: lista_comandos . ";" comando
+   20 comando: "se" expr "verdadeiro" lista_comandos . "fse"
+   21        | "se" expr "verdadeiro" lista_comandos . "falso" lista_comandos "fse"
+
+    ";"      deslocar, e ir ao estado 57
+    "fse"    deslocar, e ir ao estado 140
+    "falso"  deslocar, e ir ao estado 141
+
+
+Estado 125
+
+   69 local_de_armazenamento: local_de_armazenamento "[" lista_args_chamada "]" .
+
+    $padrão  reduzir usando a regra 69 (local_de_armazenamento)
+
+
+Estado 126
+
+   36 declaracao_variavel: "identificador" ":" "identificador" ":=" . inicializacao
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 142
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    inicializacao           ir ao estado 143
+    expr                    ir ao estado 144
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 127
+
+   42 modificador: "valor" .
+
+    $padrão  reduzir usando a regra 42 (modificador)
+
+
+Estado 128
+
+   43 modificador: "ref" .
+
+    $padrão  reduzir usando a regra 43 (modificador)
+
+
+Estado 129
+
+   39 declaracao_funcao: "identificador" "(" args . ")" "=" corpo
+   40                  | "identificador" "(" args . ")" ":" "identificador" "=" corpo
+
+    ")"  deslocar, e ir ao estado 145
+
+
+Estado 130
+
+   41 args: modificador . "identificador" ":" "identificador"
+
+    "identificador"  deslocar, e ir ao estado 146
+
+
+Estado 131
+
+   35 tipo_constantes: tipo_constantes "," "inteiro" .
+
+    $padrão  reduzir usando a regra 35 (tipo_constantes)
+
+
+Estado 132
+
+   30 descritor_tipo: "[" tipo_constantes "]" "de" . "identificador"
+
+    "identificador"  deslocar, e ir ao estado 147
+
+
+Estado 133
+
+   33 tipo_campo: "identificador" ":" "identificador" .
+
+    $padrão  reduzir usando a regra 33 (tipo_campo)
+
+
+Estado 134
+
+   32 tipo_campos: tipo_campos "," tipo_campo .
+
+    $padrão  reduzir usando a regra 32 (tipo_campos)
+
+
+Estado 135
+
+   49 lista_args_chamada: lista_args_chamada "," fator .
+
+    $padrão  reduzir usando a regra 49 (lista_args_chamada)
+
+
+Estado 136
+
+   22 comando: "para" "identificador" "de" expr "limite" . expr "faca" lista_comandos "faca"
+
+    "("              deslocar, e ir ao estado 41
+    "{"              deslocar, e ir ao estado 42
+    "inteiro"        deslocar, e ir ao estado 43
+    "real"           deslocar, e ir ao estado 44
+    "identificador"  deslocar, e ir ao estado 20
+    "nulo"           deslocar, e ir ao estado 45
+
+    expr                    ir ao estado 148
+    expressao_logica        ir ao estado 47
+    expressao_relacional    ir ao estado 48
+    expressao_aritmetica    ir ao estado 49
+    local_de_armazenamento  ir ao estado 50
+    literal                 ir ao estado 51
+    termo                   ir ao estado 52
+    fator                   ir ao estado 53
+    chamada_de_funcao       ir ao estado 54
+
+
+Estado 137
+
+   70 atribuicao_de_registro: "identificador" "=" expr .
+
+    $padrão  reduzir usando a regra 70 (atribuicao_de_registro)
+
+
+Estado 138
+
+   66 criacao_de_registro: criacao_de_registro "," atribuicao_de_registro .
+
+    $padrão  reduzir usando a regra 66 (criacao_de_registro)
+
+
+Estado 139
+
+   23 comando: "enquanto" expr "faca" lista_comandos "fenquanto" .
+
+    $padrão  reduzir usando a regra 23 (comando)
+
+
+Estado 140
+
+   20 comando: "se" expr "verdadeiro" lista_comandos "fse" .
+
+    $padrão  reduzir usando a regra 20 (comando)
+
+
+Estado 141
+
+   21 comando: "se" expr "verdadeiro" lista_comandos "falso" . lista_comandos "fse"
+
+    "identificador"  deslocar, e ir ao estado 20
+    "pare"           deslocar, e ir ao estado 21
+    "continue"       deslocar, e ir ao estado 22
+    "para"           deslocar, e ir ao estado 23
+    "enquanto"       deslocar, e ir ao estado 24
+    "se"             deslocar, e ir ao estado 25
+    "retorne"        deslocar, e ir ao estado 26
+
+    lista_comandos          ir ao estado 149
+    comando                 ir ao estado 28
+    local_de_armazenamento  ir ao estado 29
+    chamada_de_funcao       ir ao estado 30
+
+
+Estado 142
+
+   38 inicializacao: "{" . criacao_de_registro "}"
+   50 expr: "{" . criacao_de_registro "}"
+
+    "identificador"  deslocar, e ir ao estado 75
+
+    criacao_de_registro     ir ao estado 150
+    atribuicao_de_registro  ir ao estado 77
+
+
+Estado 143
+
+   36 declaracao_variavel: "identificador" ":" "identificador" ":=" inicializacao .
+
+    $padrão  reduzir usando a regra 36 (declaracao_variavel)
+
+
+Estado 144
+
+   37 inicializacao: expr .
+
+    $padrão  reduzir usando a regra 37 (inicializacao)
+
+
+Estado 145
+
+   39 declaracao_funcao: "identificador" "(" args ")" . "=" corpo
+   40                  | "identificador" "(" args ")" . ":" "identificador" "=" corpo
+
+    ":"  deslocar, e ir ao estado 151
+    "="  deslocar, e ir ao estado 152
+
+
+Estado 146
+
+   41 args: modificador "identificador" . ":" "identificador"
+
+    ":"  deslocar, e ir ao estado 153
+
+
+Estado 147
+
+   30 descritor_tipo: "[" tipo_constantes "]" "de" "identificador" .
+
+    $padrão  reduzir usando a regra 30 (descritor_tipo)
+
+
+Estado 148
+
+   22 comando: "para" "identificador" "de" expr "limite" expr . "faca" lista_comandos "faca"
+
+    "faca"  deslocar, e ir ao estado 154
+
+
+Estado 149
+
+   17 lista_comandos: lista_comandos . ";" comando
+   21 comando: "se" expr "verdadeiro" lista_comandos "falso" lista_comandos . "fse"
+
+    ";"    deslocar, e ir ao estado 57
+    "fse"  deslocar, e ir ao estado 155
+
+
+Estado 150
+
+   38 inicializacao: "{" criacao_de_registro . "}"
+   50 expr: "{" criacao_de_registro . "}"
+   66 criacao_de_registro: criacao_de_registro . "," atribuicao_de_registro
+
+    ","  deslocar, e ir ao estado 109
+    "}"  deslocar, e ir ao estado 156
+
+
+Estado 151
+
+   40 declaracao_funcao: "identificador" "(" args ")" ":" . "identificador" "=" corpo
+
+    "identificador"  deslocar, e ir ao estado 157
+
+
+Estado 152
+
+   39 declaracao_funcao: "identificador" "(" args ")" "=" . corpo
+
+    "local"  deslocar, e ir ao estado 158
+
+    $padrão  reduzir usando a regra 45 (declaracoes_de_locais)
+
+    corpo                  ir ao estado 159
+    declaracoes_de_locais  ir ao estado 160
+
+
+Estado 153
+
+   41 args: modificador "identificador" ":" . "identificador"
+
+    "identificador"  deslocar, e ir ao estado 161
+
+
+Estado 154
+
+   22 comando: "para" "identificador" "de" expr "limite" expr "faca" . lista_comandos "faca"
+
+    "identificador"  deslocar, e ir ao estado 20
+    "pare"           deslocar, e ir ao estado 21
+    "continue"       deslocar, e ir ao estado 22
+    "para"           deslocar, e ir ao estado 23
+    "enquanto"       deslocar, e ir ao estado 24
+    "se"             deslocar, e ir ao estado 25
+    "retorne"        deslocar, e ir ao estado 26
+
+    lista_comandos          ir ao estado 162
+    comando                 ir ao estado 28
+    local_de_armazenamento  ir ao estado 29
+    chamada_de_funcao       ir ao estado 30
+
+
+Estado 155
+
+   21 comando: "se" expr "verdadeiro" lista_comandos "falso" lista_comandos "fse" .
+
+    $padrão  reduzir usando a regra 21 (comando)
+
+
+Estado 156
+
+   38 inicializacao: "{" criacao_de_registro "}" .
+   50 expr: "{" criacao_de_registro "}" .
+
+    "identificador"  reduzir usando a regra 38 (inicializacao)
+    "identificador"  [reduzir usando a regra 50 (expr)]
+    "funcao"         reduzir usando a regra 38 (inicializacao)
+    "funcao"         [reduzir usando a regra 50 (expr)]
+    "acao"           reduzir usando a regra 38 (inicializacao)
+    "acao"           [reduzir usando a regra 50 (expr)]
+    $padrão         reduzir usando a regra 38 (inicializacao)
+
+
+Estado 157
+
+   40 declaracao_funcao: "identificador" "(" args ")" ":" "identificador" . "=" corpo
+
+    "="  deslocar, e ir ao estado 163
+
+
+Estado 158
+
+   46 declaracoes_de_locais: "local" . ":" lista_declaracao_variavel
+
+    ":"  deslocar, e ir ao estado 164
+
+
+Estado 159
+
+   39 declaracao_funcao: "identificador" "(" args ")" "=" corpo .
+
+    $padrão  reduzir usando a regra 39 (declaracao_funcao)
+
+
+Estado 160
+
+   44 corpo: declaracoes_de_locais . "acao" ":" lista_comandos
+
+    "acao"  deslocar, e ir ao estado 165
+
+
+Estado 161
+
+   41 args: modificador "identificador" ":" "identificador" .
+
+    $padrão  reduzir usando a regra 41 (args)
+
+
+Estado 162
+
+   17 lista_comandos: lista_comandos . ";" comando
+   22 comando: "para" "identificador" "de" expr "limite" expr "faca" lista_comandos . "faca"
+
+    ";"     deslocar, e ir ao estado 57
+    "faca"  deslocar, e ir ao estado 166
+
+
+Estado 163
+
+   40 declaracao_funcao: "identificador" "(" args ")" ":" "identificador" "=" . corpo
+
+    "local"  deslocar, e ir ao estado 158
+
+    $padrão  reduzir usando a regra 45 (declaracoes_de_locais)
+
+    corpo                  ir ao estado 167
+    declaracoes_de_locais  ir ao estado 160
+
+
+Estado 164
+
+   46 declaracoes_de_locais: "local" ":" . lista_declaracao_variavel
+
+    "identificador"  deslocar, e ir ao estado 31
+
+    lista_declaracao_variavel  ir ao estado 168
+    declaracao_variavel        ir ao estado 33
+
+
+Estado 165
+
+   44 corpo: declaracoes_de_locais "acao" . ":" lista_comandos
+
+    ":"  deslocar, e ir ao estado 169
+
+
+Estado 166
+
+   22 comando: "para" "identificador" "de" expr "limite" expr "faca" lista_comandos "faca" .
+
+    $padrão  reduzir usando a regra 22 (comando)
+
+
+Estado 167
+
+   40 declaracao_funcao: "identificador" "(" args ")" ":" "identificador" "=" corpo .
+
+    $padrão  reduzir usando a regra 40 (declaracao_funcao)
+
+
+Estado 168
+
+   10 lista_declaracao_variavel: lista_declaracao_variavel . declaracao_variavel
+   46 declaracoes_de_locais: "local" ":" lista_declaracao_variavel .
+
+    "identificador"  deslocar, e ir ao estado 31
+
+    $padrão  reduzir usando a regra 46 (declaracoes_de_locais)
+
+    declaracao_variavel  ir ao estado 62
+
+
+Estado 169
+
+   44 corpo: declaracoes_de_locais "acao" ":" . lista_comandos
+
+    "identificador"  deslocar, e ir ao estado 20
+    "pare"           deslocar, e ir ao estado 21
+    "continue"       deslocar, e ir ao estado 22
+    "para"           deslocar, e ir ao estado 23
+    "enquanto"       deslocar, e ir ao estado 24
+    "se"             deslocar, e ir ao estado 25
+    "retorne"        deslocar, e ir ao estado 26
+
+    lista_comandos          ir ao estado 170
+    comando                 ir ao estado 28
+    local_de_armazenamento  ir ao estado 29
+    chamada_de_funcao       ir ao estado 30
+
+
+Estado 170
+
+   17 lista_comandos: lista_comandos . ";" comando
+   44 corpo: declaracoes_de_locais "acao" ":" lista_comandos .
+
+    ";"  deslocar, e ir ao estado 57
+
+    $padrão  reduzir usando a regra 44 (corpo)

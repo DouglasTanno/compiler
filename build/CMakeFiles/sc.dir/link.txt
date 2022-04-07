@@ -1,0 +1,1 @@
+/usr/bin/c++   -O3 -Wall -W -pedantic   CMakeFiles/sc.dir/driver.cc.o CMakeFiles/sc.dir/main.cc.o CMakeFiles/sc.dir/scanner.cc.o CMakeFiles/sc.dir/parser.cc.o  -o ../sc -rdynamic 
