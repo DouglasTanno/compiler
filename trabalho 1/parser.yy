@@ -57,12 +57,7 @@
   int  			      integerVal;
   double 			    doubleVal;
   std::string*		stringVal;
-  //FatorASTptr		fatorVal;
-
 }
-
-//%type <fatorVal> fator
-//%type <fatorVal> literal
 
 /* Tokens */
 /* Simbolos reservados */
@@ -130,7 +125,7 @@
 
 programa:  
 		declaracoes
-        acao
+        | acao
 
 declaracoes:
         lista_declaracao_de_tipo
@@ -261,13 +256,9 @@ atribuicao_de_registro:
 	IDENTIFICADOR EQFUNC expr
 	
 literal:
-	INTEIRO /*{FatorAST s;
-	s.val = $1;
-	cout << s.val << endl;
-	s.print2();
-	$$ = &s;}*/
+	INTEIRO
 	| REAL
-	//| CADEIA
+	| CADEIA
 
 termo: 
 	termo ASTERISCO fator

@@ -13,6 +13,7 @@
   #include "driver.hh"
   #include "location.hh"
   #include "position.hh"
+  #include "AST_classes.hh"
 }
 
 %code provides {
@@ -49,20 +50,22 @@
 /* use newer C++ skeleton file */
 %skeleton "lalr1.cc"
 /* Entry point of grammar */
-%start programa
+%start expressao_aritmetica
 
 %union
 {
  /* YYLTYPE */
   int  			      integerVal;
   double 			    doubleVal;
-  std::string*		stringVal;
+  string*		stringVal;
+  literal_ast*		literalVal;
+  expr_arit_ast*	expr_arit_Val;
   //FatorASTptr		fatorVal;
 
 }
 
-//%type <fatorVal> fator
-//%type <fatorVal> literal
+%type <literalVal> literal fator termo
+%type <expr_arit_Val> expressao_aritmetica
 
 /* Tokens */
 /* Simbolos reservados */
@@ -130,7 +133,7 @@
 
 programa:  
 		declaracoes
-        acao
+        | acao
 
 declaracoes:
         lista_declaracao_de_tipo
@@ -147,7 +150,7 @@ lista_declaracao_tipo:
 
 lista_declaracoes_de_globais:
 		/*VAZIO*/
-        | GLOBAL DOISP lista_declaracao_variavel
+        | GLOBAL DOISP lista_declaracao_variavel { cout << "Declaracao variavel global" << endl; }
         
 lista_declaracao_variavel:
 	declaracao_variavel
@@ -169,24 +172,24 @@ lista_comandos:
 	| lista_comandos PVIRG comando
 	
 comando:
-	local_de_armazenamento ATRIB expr
+	local_de_armazenamento ATRIB expr { cout << "Atribuicao" << endl; }
 	| chamada_de_funcao
-	| SE expr VERDADEIRO lista_comandos FSE
-	| SE expr VERDADEIRO lista_comandos FALSO lista_comandos FSE
-	| PARA IDENTIFICADOR DE expr LIMITE expr FACA lista_comandos FPARA
-	| ENQUANTO expr FACA lista_comandos FENQUANTO
-	| PARE
-	| CONTINUE
-	| RETORNE expr
+	| SE expr VERDADEIRO lista_comandos FSE { cout << "SE simples" << endl; }
+	| SE expr VERDADEIRO lista_comandos FALSO lista_comandos FSE { cout << "SE + falso" << endl; }
+	| PARA IDENTIFICADOR DE expr LIMITE expr FACA lista_comandos FPARA { cout << "PARA" << endl; }
+	| ENQUANTO expr FACA lista_comandos FENQUANTO { cout << "ENQUANTO" << endl; }
+	| PARE { cout << "PARE" << endl; }
+	| CONTINUE { cout << "CONTINUE" << endl; }
+	| RETORNE expr { cout << "RETORNE" << endl; }
 
 
 declaracao_tipo:
         IDENTIFICADOR EQFUNC descritor_tipo
 
 descritor_tipo:
-        IDENTIFICADOR
-        | ECHAVE tipo_campos DCHAVE
-        | ECOLCH tipo_constantes DCOLCH DE IDENTIFICADOR
+        IDENTIFICADOR { cout << "Declaracao de tipo simples" << endl; }
+        | ECHAVE tipo_campos DCHAVE { cout << Declaracao de tipo campo" << endl; }
+        | ECOLCH tipo_constantes DCOLCH DE IDENTIFICADOR { cout << "Declaracao de tipo constantes" << endl; }
 
 tipo_campos:
         tipo_campo
@@ -200,15 +203,15 @@ tipo_constantes:
         | tipo_constantes VIRG INTEIRO
 
 declaracao_variavel:
-		IDENTIFICADOR DOISP IDENTIFICADOR ATRIB expr
+		IDENTIFICADOR DOISP IDENTIFICADOR ATRIB expr { cout << "Declaracao de variavel" << endl; }
 
 		
 declaracao_funcao:
-		IDENTIFICADOR EPAREN args DPAREN EQFUNC corpo
-		| IDENTIFICADOR EPAREN args DPAREN DOISP IDENTIFICADOR EQFUNC corpo
+		IDENTIFICADOR EPAREN args DPAREN EQFUNC corpo { cout << "Declaracao de procedimento" << endl; }
+		| IDENTIFICADOR EPAREN args DPAREN DOISP IDENTIFICADOR EQFUNC corpo { cout << "Declaracao de funcao" << endl; }
 		
 args:
-		modificador IDENTIFICADOR DOISP IDENTIFICADOR
+		modificador IDENTIFICADOR DOISP IDENTIFICADOR { cout << "Argumento" << endl; }
 
 modificador:
 		VALOR | REF
@@ -219,7 +222,7 @@ corpo:
 		
 declaracoes_de_locais:
 		/*VAZIO*/
-		| LOCAL DOISP lista_declaracao_variavel
+		| LOCAL DOISP lista_declaracao_variavel { cout << "Declaracao variavel local" << endl; }
 		
 lista_args_chamada:
 	/*VAZIO*/
@@ -230,17 +233,17 @@ expr: ECHAVE criacao_de_registro DCHAVE
      | expressao_logica
 	
 expressao_logica:
-	expressao_logica E expressao_relacional
-	| expressao_logica OU expressao_relacional
+	expressao_logica E expressao_relacional { cout << "E" << endl; }
+	| expressao_logica OU expressao_relacional { cout << "OU" << endl; }
 	| expressao_relacional
 	
 expressao_relacional:
-	expressao_relacional IGUAL expressao_aritmetica
-	| expressao_relacional DIF expressao_aritmetica
-	| expressao_relacional MENOR expressao_aritmetica	
-	| expressao_relacional MENORIG expressao_aritmetica
-	| expressao_relacional MAIOR expressao_aritmetica
-	| expressao_relacional MAIORIG expressao_aritmetica
+	expressao_relacional IGUAL expressao_aritmetica { cout << "IGUAL" << endl; }
+	| expressao_relacional DIF expressao_aritmetica { cout << "DIFERENTE" << endl; }
+	| expressao_relacional MENOR expressao_aritmetica { cout << "MENOR" << endl; }
+	| expressao_relacional MENORIG expressao_aritmetica { cout << "MENOR OU IGUAL" << endl; }
+	| expressao_relacional MAIOR expressao_aritmetica { cout << "MAIOR" << endl; }
+	| expressao_relacional MAIORIG expressao_aritmetica { cout << "MAIOR OU IGUAL" << endl; }
 	| expressao_aritmetica
 	
 expressao_aritmetica:
@@ -261,13 +264,9 @@ atribuicao_de_registro:
 	IDENTIFICADOR EQFUNC expr
 	
 literal:
-	INTEIRO /*{FatorAST s;
-	s.val = $1;
-	cout << s.val << endl;
-	s.print2();
-	$$ = &s;}*/
+	INTEIRO 
 	| REAL
-	//| CADEIA
+	| CADEIA
 
 termo: 
 	termo ASTERISCO fator
@@ -275,7 +274,7 @@ termo:
 	| fator
 
 fator:
-	EPAREN expr DPAREN 
+	EPAREN expr DPAREN { cout << "Expressao com parenteses " << endl; }
 	| literal
 	| local_de_armazenamento
 	| chamada_de_funcao
@@ -299,5 +298,3 @@ namespace Simples {
         std::cerr << *driver.location_ << ": " << m << std::endl;
         driver.error_ = (driver.error_ == 127 ? 127 : driver.error_ + 1);
    }
-}
-
