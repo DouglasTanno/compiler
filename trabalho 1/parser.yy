@@ -59,6 +59,7 @@
   std::string*		stringVal;
 }
 
+
 /* Tokens */
 /* Simbolos reservados */
 %token				VIRG			"," 
@@ -125,7 +126,7 @@
 
 programa:  
 		declaracoes
-        | acao
+        acao
 
 declaracoes:
         lista_declaracao_de_tipo
@@ -168,7 +169,7 @@ comando:
 	| chamada_de_funcao
 	| SE expr VERDADEIRO lista_comandos FSE
 	| SE expr VERDADEIRO lista_comandos FALSO lista_comandos FSE
-	| PARA IDENTIFICADOR DE expr LIMITE expr FACA lista_comandos FPARA
+	| PARA IDENTIFICADOR DE expr LIMITE expr FACA lista_comandos FACA
 	| ENQUANTO expr FACA lista_comandos FENQUANTO
 	| PARE
 	| CONTINUE
@@ -256,9 +257,13 @@ atribuicao_de_registro:
 	IDENTIFICADOR EQFUNC expr
 	
 literal:
-	INTEIRO
+	INTEIRO /*{FatorAST s;
+	s.val = $1;
+	cout << s.val << endl;
+	s.print2();
+	$$ = &s;}*/
 	| REAL
-	| CADEIA
+	//| CADEIA
 
 termo: 
 	termo ASTERISCO fator

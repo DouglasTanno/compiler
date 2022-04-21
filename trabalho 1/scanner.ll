@@ -49,16 +49,6 @@ typedef Simples::Parser::token_type token_type;
 blank   [ \t]+
 eol     [\n\r]+
 
-variable : IDENTIFIER {  std::cout << "Identificador: " << *$1 << std::endl; }
-
-%%
-
-namespace Simples {
-   void Parser::error(const location&, const std::string& m) {
-        std::cerr << *driver.location_ << ": " << m << std::endl;
-        driver.error_ = (driver.error_ == 127 ? 127 : driver.error_ + 1);
-   }
-}
 %%
 
  /* The following paragraph suffices to track locations accurately. Each time
@@ -153,8 +143,6 @@ namespace Simples {
   STEP();
 }
 
-
-\" string_buf_ptr = string_buf; BEGIN(stringStartCond);
 {blank} { STEP(); }
 
 {eol}  { LINE(yyleng); }
@@ -163,7 +151,7 @@ namespace Simples {
                 std::cerr << *driver.location_ << " Unexpected token : "
                                               << *yytext << std::endl;
                 driver.error_ = (driver.error_ == 127 ? 127
-                                : driver.error_IDENTIFIER + 1);
+                                : driver.error_ + 1);
                 STEP ();
               }
 
@@ -191,4 +179,3 @@ int SimplesFlexLexer::yylex()
   std::cerr << "call parsepitFlexLexer::yylex()!" << std::endl;
   return 0;
 }
-
