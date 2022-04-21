@@ -169,7 +169,7 @@ comando:
 	| chamada_de_funcao
 	| SE expr VERDADEIRO lista_comandos FSE
 	| SE expr VERDADEIRO lista_comandos FALSO lista_comandos FSE
-	| PARA IDENTIFICADOR DE expr LIMITE expr FACA lista_comandos FACA
+	| PARA IDENTIFICADOR DE expr LIMITE expr FACA lista_comandos FPARA
 	| ENQUANTO expr FACA lista_comandos FENQUANTO
 	| PARE
 	| CONTINUE
@@ -257,11 +257,7 @@ atribuicao_de_registro:
 	IDENTIFICADOR EQFUNC expr
 	
 literal:
-	INTEIRO /*{FatorAST s;
-	s.val = $1;
-	cout << s.val << endl;
-	s.print2();
-	$$ = &s;}*/
+	INTEIRO
 	| REAL
 	//| CADEIA
 

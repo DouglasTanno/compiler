@@ -9,6 +9,7 @@
 #define COL(col) driver.location_->columns(col)
 #define LINE(line) do {driver.location_->lines(line);} while (0)
 #define YY_USER_ACTION COL(yyleng);
+#define MAX_STR 1024
 
 /* import the parser's token type into a local typedef */
 typedef Simples::Parser::token token;
@@ -17,6 +18,9 @@ typedef Simples::Parser::token_type token_type;
 /* By default yylex returns int, we use token_type. Unfortunately yyterminate
  * by default returns 0, which is not of token_type. */
 #define yyterminate() return token::TOK_EOF
+
+char string_buf[MAX];
+char *string_buf_ptr;
 
 %}
 
@@ -50,6 +54,9 @@ blank   [ \t]+
 eol     [\n\r]+
 
 %%
+
+%x comentarioCond
+%x cadeiaCond
 
  /* The following paragraph suffices to track locations accurately. Each time
  yylex is invoked, the begin position is moved onto the end position. */
@@ -128,7 +135,7 @@ eol     [\n\r]+
 	return token::IDENTIFICADOR;
 }
 
-<cadeiaCond>\" {       
+/*<cadeiaCond>\" {       
     BEGIN(INITIAL);
     *string_buf_ptr = '\0';
     return token::CADEIA;
@@ -141,7 +148,7 @@ eol     [\n\r]+
 <comentarioCond>"*/" {          
   BEGIN(INITIAL);
   STEP();
-}
+}*/
 
 {blank} { STEP(); }
 
