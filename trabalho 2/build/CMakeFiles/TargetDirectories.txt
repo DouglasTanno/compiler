@@ -1,3 +1,0 @@
-/tmp/guest-p9c5vv/Downloads/simples_compilador/build/CMakeFiles/edit_cache.dir
-/tmp/guest-p9c5vv/Downloads/simples_compilador/build/CMakeFiles/sc.dir
-/tmp/guest-p9c5vv/Downloads/simples_compilador/build/CMakeFiles/rebuild_cache.dir

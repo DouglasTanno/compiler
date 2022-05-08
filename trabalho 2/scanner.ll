@@ -49,16 +49,6 @@ typedef Simples::Parser::token_type token_type;
 blank   [ \t]+
 eol     [\n\r]+
 
-variable : IDENTIFIER {  std::cout << "Identificador: " << *$1 << std::endl; }
-
-%%
-
-namespace Simples {
-   void Parser::error(const location&, const std::string& m) {
-        std::cerr << *driver.location_ << ": " << m << std::endl;
-        driver.error_ = (driver.error_ == 127 ? 127 : driver.error_ + 1);
-   }
-}
 %%
 
  /* The following paragraph suffices to track locations accurately. Each time
@@ -67,58 +57,16 @@ namespace Simples {
   STEP();
 %}
 
-","             {return token::VIRG;}
-":"             {return token::DOISP;}
-";"             {return token::PVIRG;}
 "("             {return token::EPAREN;}
 ")"             {return token::DPAREN;}
-"["             {return token::ECOLCH;}
-"]"             {return token::DCOLCH;}
-"{"             {return token::ECHAVE;}
-"}"             {return token::DCHAVE;}
-"."             {return token::PONTO;}
 "+"             {return token::MAIS;}
 "-"             {return token::MENOS;}
 "*"             {return token::ASTERISCO;}
 "/"             {return token::BARRA;}
 ":="            {return token::ATRIB;}
-"=="            {return token::IGUAL;}
-"!="            {return token::DIF;}
-"<"             {return token::MENOR;}
-"<="            {return token::MENORIG;}
-">"             {return token::MAIOR;}
-">="            {return token::MAIORIG;}
-"&"             {return token::E;}
-"|"             {return token::OU;}
 "="             {return token::EQFUNC;}
 
-"pare"          {return token::PARE;}
-"continue"      {return token::CONTINUE;}
-"para"          {return token::PARA;}
-"fpara"         {return token::FPARA;}
-"enquanto"      {return token::ENQUANTO;}
-"fenquanto"     {return token::FENQUANTO;}
-"faca"          {return token::FACA;}
-"se"            {return token::SE;}
-"fse"           {return token::FSE;}
-"verdadeiro"    {return token::VERDADEIRO;}
-"falso"         {return token::FALSO;}
-"tipo"          {return token::TIPO;}
-"de"            {return token::DE;}
-"limite"        {return token::LIMITE;}
-"global"        {return token::GLOBAL;}
-"local"         {return token::LOCAL;}
-"inteiro"       {return token::INTEIRO;}
-"real"          {return token::REAL;}
-"cadeia"        {return token::CADEIA;}
-"valor"         {return token::VALOR;}
-"ref"           {return token::REF;}
-"retorne"       {return token::RETORNE;}
-"nulo"          {return token::NULO;}
-"inicio"        {return token::INICIO;}
-"fim"           {return token::FIM;}
-"funcao"        {return token::FUNCAO;}
-"acao"          {return token::ACAO;}
+"print"         {return token::PRINT;}
 
 
  /*** BEGIN EXAMPLE - Change the example lexer rules below ***/
@@ -128,33 +76,12 @@ namespace Simples {
     return token::INTEIRO;
  }
 
-[0-9]+"."[0-9]* {
-	yylval->doubleVal = atof(yytext);
-	return token::REAL;
-}
-
 [A-Za-z][A-Za-z0-9_,.-]* {
-	yylval->stringVal = new std::string(yytext, yyleng);
-	return token::IDENTIFICADOR;
-}
-
-<cadeiaCond>\" {       
-    BEGIN(INITIAL);
-    *string_buf_ptr = '\0';
-    return token::CADEIA;
-}
-
-"/*"  BEGIN(comentarioCond);
-<comentarioCond>[^*\n]*          
-<comentarioCond>"*"+[^*/\n]*    
-<comentarioCond>\n              
-<comentarioCond>"*/" {          
-  BEGIN(INITIAL);
-  STEP();
+  yylval->stringVal = new std::string(yytext, yyleng);
+  return token::IDENTIFICADOR;
 }
 
 
-\" string_buf_ptr = string_buf; BEGIN(stringStartCond);
 {blank} { STEP(); }
 
 {eol}  { LINE(yyleng); }
@@ -163,7 +90,7 @@ namespace Simples {
                 std::cerr << *driver.location_ << " Unexpected token : "
                                               << *yytext << std::endl;
                 driver.error_ = (driver.error_ == 127 ? 127
-                                : driver.error_IDENTIFIER + 1);
+                                : driver.error_ + 1);
                 STEP ();
               }
 
@@ -191,4 +118,3 @@ int SimplesFlexLexer::yylex()
   std::cerr << "call parsepitFlexLexer::yylex()!" << std::endl;
   return 0;
 }
-

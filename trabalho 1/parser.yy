@@ -99,7 +99,7 @@
 %token				FPARA			"fpara"
 %token				ENQUANTO		"enquanto"
 %token				FENQUANTO		"fenquanto"
-%token				FACA			"faca"
+%token				FACA			"faça"
 %token				SE				"se"
 %token				FSE				"fse"
 %token				VERDADEIRO		"verdadeiro"
@@ -114,11 +114,11 @@
 %token				REF				"ref"
 %token				RETORNE			"retorne"
 %token				NULO			"nulo"
-%token				INICIO			"inicio"
+%token				INICIO			"início"
 %token				FIM				"fim"
-%token				FUNCAO			"funcao"
-%token				ACAO			"acao"
-%token				COMENTARIO		"comentario"
+%token				FUNCAO			"função"
+%token				ACAO			"ação"
+%token				COMENTARIO		"comentário"
 
 %%
 
