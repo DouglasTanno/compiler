@@ -126,7 +126,7 @@
 
 programa:  
 		declaracoes
-        acao
+        | acao
 
 declaracoes:
         lista_declaracao_de_tipo
@@ -223,6 +223,7 @@ lista_args_chamada:
 	| lista_args_chamada VIRG fator
 
 expr: ECHAVE criacao_de_registro DCHAVE
+     | ECOLCH criacao_de_vetor DCOLCH
      | expressao_logica
 	
 expressao_logica:
@@ -247,6 +248,14 @@ expressao_aritmetica:
 criacao_de_registro:
 	atribuicao_de_registro
 	| criacao_de_registro VIRG atribuicao_de_registro
+	
+criacao_de_vetor:
+	atribuicao_de_vetor
+	| criacao_de_vetor VIRG atribuicao_de_vetor
+	
+atribuicao_de_vetor:
+	/*VAZIO*/
+	| expr
 	
 local_de_armazenamento:
 	IDENTIFICADOR
@@ -292,4 +301,3 @@ namespace Simples {
         driver.error_ = (driver.error_ == 127 ? 127 : driver.error_ + 1);
    }
 }
-

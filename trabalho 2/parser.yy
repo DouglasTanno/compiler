@@ -3,7 +3,7 @@
 /*** C++ Declarations ***/
 #include "parser.hh"
 #include "scanner.hh"
-#include "hash.h"
+/*#include "hash.h"*/
 
 #define yylex driver.scanner_->yylex
 
